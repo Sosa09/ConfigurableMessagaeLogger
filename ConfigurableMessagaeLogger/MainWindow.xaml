@@ -1,0 +1,191 @@
+﻿<Window x:Class="ConfigurableMessagaeLogger.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ConfigurableMessagaeLogger"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800"
+        Background="#f5f6fa">
+    <Window.Resources>
+        <!--filter button styles-->
+        <Style TargetType="Button" x:Key="CustomButton">
+
+            <Style.Setters>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="VerticalAlignment" Value="Bottom"/>
+                <Setter Property="Height" Value="30"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Foreground" Value="white"/>
+                <Setter Property="Margin" Value="15,2"/>
+                <Setter Property="Command" Value="{Binding ShowLogCommand}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border x:Name="test" Background="#353b48" CornerRadius="5">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <DataTrigger Binding="{Binding CommandParameter, RelativeSource={RelativeSource Mode=Self}}" Value="Warning">
+                                    <Setter TargetName="test" Property="Background" Value="#fbc531"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CommandParameter, RelativeSource={RelativeSource Mode=Self}}" Value="Error">
+                                    <Setter TargetName="test" Property="Background" Value="#e84118"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CommandParameter, RelativeSource={RelativeSource Mode=Self}}" Value="Information">
+                                    <Setter TargetName="test" Property="Background" Value="#192a56"/>
+                                </DataTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+
+                    </Setter.Value>
+
+                </Setter>
+
+            </Style.Setters>
+            <Style.Triggers>
+                <Trigger Property="IsMouseDirectlyOver" Value="True">
+                    <Setter Property="Opacity" Value="0.5"/>
+                </Trigger>
+            </Style.Triggers>
+
+        </Style>
+        
+        <!--DataGrid block style-->
+        
+        <!--other styles-->
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="5*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.ColumnSpan="2" Background="#273c75">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <!--burger menu icon (jsut for decoration not working )-->
+            <Border BorderBrush="White" BorderThickness="2" Padding="15,5" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Right" CornerRadius="5" Grid.Column="2">
+                <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center">
+                    <Label Content="---" FontWeight="ExtraBold" Foreground="White" Margin="-10"/>
+                    <Label Content="---" FontWeight="ExtraBold" Foreground="White" Margin="-10"/>
+                    <Label Content="---" FontWeight="ExtraBold" Foreground="White" Margin="-10"/>
+                    <Label Content="" FontWeight="ExtraBold" Foreground="White" Margin="-10"/>
+                </StackPanel>
+            </Border>
+ 
+            <!--Application Name-->
+            <Label Foreground="White" Margin="5,0" VerticalAlignment="Center" FontSize="28">Logger Application</Label>
+        </Grid>
+        <!--Block Filter-->
+        <Border Grid.Row="1" Grid.Column="1" BorderBrush="#273c75" BorderThickness="5,0,0,0" Margin="0,10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1.5*"/>
+
+                </Grid.RowDefinitions>
+                <Grid Background="White" Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Content="Insert: " FontWeight="Bold"/>
+
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+                        <DockPanel Margin="5,0" Grid.Row="0" LastChildFill="True">
+                            <Label Width="100">Type:</Label>
+                            <ComboBox ItemsSource="{Binding ListLogTypes}" SelectedItem="{Binding SelectedType}"/>
+                        </DockPanel>
+                        <DockPanel Margin="5,0" Grid.Row="1" LastChildFill="True">
+                            <Label Width="100">Message:</Label>
+                            <TextBox Text="{Binding Message}" AcceptsReturn="True"></TextBox>
+                        </DockPanel>
+                        <DockPanel Margin="5,0" Grid.Row="2" LastChildFill="True">
+                            <Label Width="100">Application:</Label>
+                            <TextBox Text="{Binding Application}" ></TextBox>
+                        </DockPanel>
+
+
+                    </Grid>
+                    <Button   Grid.Row="3"  Content="Submit" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5,0" Command="{Binding SubmitLogCommand}" ></Button>
+
+                </Grid>
+                <Grid Grid.Row="1" Background="White" Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="1*"/>
+
+                    </Grid.RowDefinitions>
+                    <StackPanel>
+                        <Label Content="Filter:" FontWeight="Bold" VerticalAlignment="Top"/>
+                        <DatePicker  Margin="15,0" VerticalAlignment="Center" HorizontalAlignment="Stretch" SelectedDate="{Binding SelectedDate}"></DatePicker>
+                    </StackPanel>
+                    <Grid Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Style="{StaticResource CustomButton}" Content="💥"       CommandParameter="Error"></Button>
+                        <Button Grid.Column="1" Style="{StaticResource CustomButton}" Content="ℹ" CommandParameter="Information"></Button>
+                        <Button Grid.Column="2" Style="{StaticResource CustomButton}" Content="⚠"     CommandParameter="Warning"></Button>
+                    </Grid>
+
+                    <StackPanel Grid.Row="2" VerticalAlignment="Bottom" >
+
+                        <Button Content="Reset View" Margin="15,2"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Border>
+        
+        <!--Block Log Viewer-->
+        <DataGrid Grid.Row="1" Background="Transparent"  ItemsSource="{Binding LogMessages, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False" Margin="15, 10">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}"/>
+                <DataGridTextColumn Header="Message" Binding="{Binding Message}"/>
+                <DataGridTextColumn Header="Type" Binding="{Binding Type}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="Black"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Type}" Value="Error">
+                                    <Setter Property="Background" Value="#e84118"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Type}" Value="Warning">
+                                    <Setter Property="Background" Value="#fbc531"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Type}" Value="Information">
+                                    <Setter Property="Background" Value="#192a56"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="TimeStamp" Binding="{Binding TimeStamp}"/>
+                <DataGridTextColumn Header="Application" Binding="{Binding Application}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+              
+    </Grid>
+</Window>
